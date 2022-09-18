@@ -135,8 +135,10 @@ def main():
         datas_dict_list = dict_converter(datas)
         # 3. initiate the math_ops objects and set matchers for encripting
         math_ops_bill = Math_operations(find_num(datas_dict_list, COLUMN_AVG), COLUMN_AVG) # COLUMN_AVG is the 'Billing' column
-        math_ops_names = Math_operations(find_num(datas_dict_list, COLUMN_LEN), COLUMN_LEN) # COLUMN_AVG is the 'Name' column 
-        matchers = [x.lower() for x in FIELDS_TO_ENCRIPT] # set the matchers
+        math_ops_names = Math_operations(find_num(datas_dict_list, COLUMN_LEN), COLUMN_LEN) # COLUMN_AVG is the 'Name' column
+        print(FIELDS_TO_ENCRIPT.split(','))
+        matchers = [x.lower() for x in FIELDS_TO_ENCRIPT.split(',')]
+        print(matchers)# set the matchers
         # 4. with math_ops_bill calculete the average of the column take in count -> COLUMN_AVG
         avg = math_ops_bill.avg()
         # 5. encript the data
@@ -147,21 +149,34 @@ def main():
         write_file(list_to_write)
         # 8. make a report with the math_ops using the given columns of interest
         report(math_ops_bill, math_ops_names)
-    except FileNotFoundError:
-        print("File not found")
+    except FileNotFoundError as e:
+        print(e)
     
 if __name__ == '__main__':
     try:
+        print(sys.argv)
         # the user can itroduce the name of the file to be read and write
         FILE_NAME = sys.argv[1]
         ENCRIPTED_FILE_NAME = sys.argv[2]
+        ALPHA_ENCRIPTER = sys.argv[3]
+        FIELDS_TO_ENCRIPT = sys.argv[4]
+        COLUMN_AVG = sys.argv[5]
+        COLUMN_LEN = sys.argv[6]
+        PATH_SOURCE = sys.argv[7]
+        PATH_TMP = sys.argv[8]
         main()
-    except IndexError:
+    except IndexError as e:
         # if the user do not pass the files names the default ones will be used
-        sys.stdout.write("No enough input given")
+        sys.stdout.write("Error: ")
         sys.stdout.write('\n')
         sys.stdout.write("The script will be executed with default name for the files")
         sys.stdout.write('\n')
         FILE_NAME = "customers.csv"
         ENCRIPTED_FILE_NAME = "masked_client.csv"
+        ALPHA_ENCRIPTER = 'X'
+        FIELDS_TO_ENCRIPT = ["Name", "Email", "Billing"]
+        COLUMN_AVG = "Billing"
+        COLUMN_LEN = "Name"
+        PATH_SOURCE = "./source"
+        PATH_TMP = "./tmp"
         main()
