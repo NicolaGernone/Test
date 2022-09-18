@@ -2,7 +2,7 @@
 
 ## Problem Description
 
-The problem is based on encripting sensitive informations in a CSV file, the sensitive informations are given in the [statement.md](Test/statement.2.0.md) as how to encript the data.
+The problem is based on encripting sensitive informations in a CSV file, the sensitive informations are given in the [statement.2.0.md](statement.2.0.md) as how to encript the data.
 No dependencies on the standard `csv` module or any 3rd-party modules are allowed.
 - Encription rules:
   The columns containing sensitive data are "Name", "Email" and "Billing". 
