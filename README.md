@@ -26,6 +26,7 @@ To make user friendly the use of application i implement a way to introduce the 
 ## Usage
 
 Make sure to ave installed python3 on your computer [python](https://www.python.org/downloads/).
+Create the output directory that you want to use or check if the tmp directory is in the Test directory to use the default output path.
 
 To run the script cd to the cloned folder Test and open the terminal.
 Run:
@@ -49,7 +50,7 @@ file_encriptor.py "name_of_the_file" "name_of_the_encripted_file" "encriptor" "c
 file_encriptor.py "customers.csv" "masked_client.csv" "&" "Name,Email,Billing" "Billing" "Name" "./source" "./tmp"
 ````
 
-if you want to use the default names run:
+If you want to use the default names run:
 ````bash
 file_encriptor.py
 ````
