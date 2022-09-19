@@ -30,8 +30,25 @@ Make sure to ave installed python3 on your computer [python](https://www.python.
 To run the script cd to the cloned folder Test and open the terminal.
 Run:
 ````bash
-file_encriptor.py "name_of_the_file" "name_of_the_encripted_file"
+file_encriptor.py "name_of_the_file" "name_of_the_encripted_file" "encriptor" "col1,col2,col3,..." "column_avg" "column_len" "path_input" "path_output"
 ````
+- Arguments:
+    * "name_of_the_file": is the name of the input file.
+    * "name_of_the_encripted_file": is the name of the output file.
+    * "encriptor": is the character to use to encript the string.
+    * "col1,col2,col3,...": is the list of columns to encript.
+    * "column_avg": is the column to use to calculate the avg.
+    * "column_len": is the column to use to calculate the avg dor the no numeric fields.
+    * "path_input": is the path of the input file.
+    * "path_output": is the path of the output file.
+
+* Order is important*
+
+- Example:
+````bash
+file_encriptor.py "customers.csv" "masked_client.csv" "&" "Name,Email,Billing" "Billing" "Name" "./source" "./tmp"
+````
+
 if you want to use the default names run:
 ````bash
 file_encriptor.py
@@ -39,6 +56,4 @@ file_encriptor.py
 
 ## Considerations
 
-To not cause a lot of issue with the runnin i implemented it just with the names of the in/out files needed.
-The inputs could be implemented with the type of encription, the columns names to encript etc if needed.
 The list of dictionarie could be a dict with the keys as the column names and the values as a list of all the column data as well.
