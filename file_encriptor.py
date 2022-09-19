@@ -1,13 +1,6 @@
 from math_operations import Math_operations
 import sys
 
-ALPHA_ENCRIPTER = 'X'
-FIELDS_TO_ENCRIPT = ["Name", "Email", "Billing"]
-COLUMN_AVG = "Billing"
-COLUMN_LEN = "Name"
-PATH_SOURCE = "./source"
-PATH_TMP = "./tmp"
-
 """
     Method used to read a file, with is chosen because have the close method integrated,
     to avoid code errors or mistakes and for a better read of it.
@@ -46,13 +39,19 @@ def isfloat(num):
 """ 
 def find_num(data, column) -> list:
     list_of_values = [] # init list
-    for dicto in data: 
-        for key, value in dicto.items():
-            if isfloat(value) and key.lower() == column.lower():
-                list_of_values.append(float(value)) # add to the list all the float vaues found
-            elif not isfloat(value) and key.lower() == column.lower() and value != ' ':
-                list_of_values.append(len(value)) # add to the list all the lenghts of the value found if it is not a float
-    return list_of_values
+    try:
+        for dicto in data: 
+            for key, value in dicto.items():
+                if isfloat(value) and key.lower() == column.lower():
+                    list_of_values.append(float(value)) # add to the list all the float vaues found
+                elif not isfloat(value) and key.lower() == column.lower() and value != ' ':
+                    list_of_values.append(len(value)) # add to the list all the lenghts of the value found if it is not a float
+        return list_of_values
+    except KeyError as e:
+        print("Invalid Key ", e)
+    finally:
+        #if there are an error return an empty list
+        return list_of_values
 
 """
     Encriptor method.
@@ -63,37 +62,43 @@ def find_num(data, column) -> list:
 """ 
 def encript(data, encripter_alpha, encripter_num=0, matchers=None) -> list:
     encripted_list = [] # init list
-    for dicto in data:
-        for key, value in dicto.items():
-            if matchers: # if matchers are pass as argument
-                for v in value:
-                    if v.isalpha() and key.lower() in matchers:
-                        value = value.replace(v, encripter_alpha) # replacing all the characters alpha of the value
-                dicto[key] = value # save the new value
-                if isfloat(value) and key.lower() in matchers:
-                    value = encripter_num # replacing all the characters numeric of the value
+    try:
+        for dicto in data:
+            for key, value in dicto.items():
+                if matchers: # if matchers are pass as argument
+                    for v in value:
+                        if v.isalpha() and key.lower() in matchers:
+                            value = value.replace(v, encripter_alpha) # replacing all the characters alpha of the value
                     dicto[key] = value # save the new value
-            else: #same conditions without matchers
-                for v in value:
-                    if v.isalpha():
-                        value.replace(v, encripter_alpha)
-                dicto[key] = value
-                if isfloat(value):
-                    value = encripter_num
+                    if isfloat(value) and key.lower() in matchers:
+                        value = encripter_num # replacing all the characters numeric of the value
+                        dicto[key] = value # save the new value
+                else: #same conditions without matchers
+                    for v in value:
+                        if v.isalpha():
+                            value.replace(v, encripter_alpha)
                     dicto[key] = value
-        encripted_list.append(dicto) # saving the encripted dictionaries in a new list
-    return encripted_list
-
+                    if isfloat(value):
+                        value = encripter_num
+                        dicto[key] = value
+            encripted_list.append(dicto) # saving the encripted dictionaries in a new list
+        return encripted_list
+    except KeyError as e:
+        print("Invalid Key ", e)
+    finally:
+        #if there are an error return an empty list
+        return encripted_list
+    
 """
     Method to convert the string rows reads in a list of dictionaries. 
     Return a list of dictionaries
-    datas is a list of strings
+    data is a list of strings
 """ 
-def dict_converter(datas):
+def dict_converter(data):
     try:
         list_of_dict = [] # init list
-        keys = datas[0].replace('\n', '').split(',') # assuming that we use a csv structure with the first line as name of columns, trasform it to dict keys
-        for item in datas[1:]:
+        keys = data[0].replace('\n', '').split(',') # assuming that we use a csv structure with the first line as name of columns, trasform it to dict keys
+        for item in data[1:]:
             values = item.replace('\n', '').split(',') # all the other lines will be the values split by column
             list_of_dict.append({keys[i]: values[i] for i in range(len(keys))})
         return list_of_dict
@@ -120,6 +125,8 @@ def list_converter(dicts):
     The argument can be multiple and make a report for each one of them
 """ 
 def report(*math_ops):
+    sys.stdout.write("Report:")
+    sys.stdout.write('\n'*2)
     for ops in math_ops:
         sys.stdout.write(str(ops))
         sys.stdout.write('\n')
@@ -128,34 +135,28 @@ def report(*math_ops):
     Main method
 """                   
 def main():
-    try:
-        # 1. read the file
-        datas = read_file()
-        # 2. convert the string rows in a list of dict to map the data
-        datas_dict_list = dict_converter(datas)
-        # 3. initiate the math_ops objects and set matchers for encripting
-        math_ops_bill = Math_operations(find_num(datas_dict_list, COLUMN_AVG), COLUMN_AVG) # COLUMN_AVG is the 'Billing' column
-        math_ops_names = Math_operations(find_num(datas_dict_list, COLUMN_LEN), COLUMN_LEN) # COLUMN_AVG is the 'Name' column
-        print(FIELDS_TO_ENCRIPT.split(','))
-        matchers = [x.lower() for x in FIELDS_TO_ENCRIPT.split(',')]
-        print(matchers)# set the matchers
-        # 4. with math_ops_bill calculete the average of the column take in count -> COLUMN_AVG
-        avg = math_ops_bill.avg()
-        # 5. encript the data
-        data_encripted = encript(datas_dict_list, ALPHA_ENCRIPTER, avg, matchers)
-        # 6. convert the thata tu list of string to be write in a file
-        list_to_write = list_converter(data_encripted)
-        # 7. write a new encripted file
-        write_file(list_to_write)
-        # 8. make a report with the math_ops using the given columns of interest
-        report(math_ops_bill, math_ops_names)
-    except FileNotFoundError as e:
-        print(e)
+    # 1. read the file
+    data = read_file()
+    # 2. convert the string rows in a list of dict to map the data
+    data_dict_list = dict_converter(data)
+    # 3. initiate the math_ops objects and set matchers for encripting
+    math_ops_avg = Math_operations(find_num(data_dict_list, COLUMN_AVG), COLUMN_AVG) # COLUMN_AVG is the 'Billing' column
+    math_ops_len = Math_operations(find_num(data_dict_list, COLUMN_LEN), COLUMN_LEN) # COLUMN_AVG is the 'Name' column
+    matchers = [x.lower() for x in FIELDS_TO_ENCRIPT.split(',')] # set the matchers
+    # 4. with math_ops_bill calculete the average of the column take in count -> COLUMN_AVG
+    avg = math_ops_avg.avg()
+    # 5. encript the data
+    data_encripted = encript(data_dict_list, ALPHA_ENCRIPTER, avg, matchers)
+    # 6. convert the thata tu list of string to be write in a file
+    list_to_write = list_converter(data_encripted)
+    # 7. write a new encripted file
+    write_file(list_to_write)
+    # 8. make a report with the math_ops using the given columns of interest
+    report(math_ops_avg, math_ops_len)
     
 if __name__ == '__main__':
-    try:
-        print(sys.argv)
-        # the user can itroduce the name of the file to be read and write
+    # the user can itroduce all the arguments
+    if len(sys.argv) == 9: #if introduce all arguments
         FILE_NAME = sys.argv[1]
         ENCRIPTED_FILE_NAME = sys.argv[2]
         ALPHA_ENCRIPTER = sys.argv[3]
@@ -165,18 +166,17 @@ if __name__ == '__main__':
         PATH_SOURCE = sys.argv[7]
         PATH_TMP = sys.argv[8]
         main()
-    except IndexError as e:
-        # if the user do not pass the files names the default ones will be used
-        sys.stdout.write("Error: ")
-        sys.stdout.write('\n')
-        sys.stdout.write("The script will be executed with default name for the files")
-        sys.stdout.write('\n')
+    elif len(sys.argv) == 1: #if none of them
         FILE_NAME = "customers.csv"
         ENCRIPTED_FILE_NAME = "masked_client.csv"
         ALPHA_ENCRIPTER = 'X'
-        FIELDS_TO_ENCRIPT = ["Name", "Email", "Billing"]
+        FIELDS_TO_ENCRIPT = "Name,Email,Billing"
         COLUMN_AVG = "Billing"
         COLUMN_LEN = "Name"
         PATH_SOURCE = "./source"
         PATH_TMP = "./tmp"
         main()
+    else: # if the user do not pass enough arguments
+        sys.stdout.write("Introduce the correct number of paramiters or none of them to execute the script")
+        sys.stdout.write('\n')        
+        

@@ -22,6 +22,9 @@ With this mapping i can easly obtain the data needed.
 To read and write the file i choose the 'with' statemen to agilize the code as it has embedded a close funtion and a Exception Handler.
 The implementation of Math_operation class allow me to easly use the mathematicals methods implemented in it to calculate the average for the encriptor and make the report with the min, max and avg of the given columns names.
 To make user friendly the use of application i implement a way to introduce the names of the files in input and output if needed, if the names are not itroduced at the running the default ones, given in the statement, will be used (input: "customers.csv", output: "masked_clients.csv").
+The Main method is main() wehere all the steps to encript are executed.
+The Exceptions are catched into the methods to make them more auto-sufficients.
+I choose this approach to made the methods the most indipendend possible so they could be re-used easly without any modification.
 
 ## Usage
 
@@ -37,7 +40,7 @@ file_encriptor.py "name_of_the_file" "name_of_the_encripted_file" "encriptor" "c
   * "name_of_the_file": is the name of the input file.
   * "name_of_the_encripted_file": is the name of the output file.
   * "encriptor": is the character to use to encript the string.
-  * "col1,col2,col3,...": is the list of columns to encript.
+  * "col1,col2,col3,...": is the list of columns names to encript.
   * "column_avg": is the column to use to calculate the avg.
   * "column_len": is the column to use to calculate the avg dor the no numeric fields.
   * "path_input": is the path of the input file.
@@ -47,7 +50,7 @@ file_encriptor.py "name_of_the_file" "name_of_the_encripted_file" "encriptor" "c
 
 - Example:
   ````bash
-  file_encriptor.py "customers.csv" "masked_client.csv" "&" "Name,Email,Billing" "Billing" "Name" "./source" "./tmp"
+  file_encriptor.py "customers.csv" "masked_client.csv" "X" "Name,Email,Billing" "Billing" "Name" "./source" "./tmp"
   ````
 
   If you want to use the default names run:
