@@ -26,6 +26,7 @@ To make user friendly the use of application i implement a way to introduce the 
 ## Usage
 
 Make sure to ave installed python3 on your computer [python](https://www.python.org/downloads/).
+Create the output directory that you want to use or check if the tmp directory is in the Test directory to use the default output path.
 
 To run the script cd to the cloned folder Test and open the terminal.
 Run:
@@ -33,26 +34,26 @@ Run:
 file_encriptor.py "name_of_the_file" "name_of_the_encripted_file" "encriptor" "col1,col2,col3,..." "column_avg" "column_len" "path_input" "path_output"
 ````
 - Arguments:
-    * "name_of_the_file": is the name of the input file.
-    * "name_of_the_encripted_file": is the name of the output file.
-    * "encriptor": is the character to use to encript the string.
-    * "col1,col2,col3,...": is the list of columns to encript.
-    * "column_avg": is the column to use to calculate the avg.
-    * "column_len": is the column to use to calculate the avg dor the no numeric fields.
-    * "path_input": is the path of the input file.
-    * "path_output": is the path of the output file.
+  * "name_of_the_file": is the name of the input file.
+  * "name_of_the_encripted_file": is the name of the output file.
+  * "encriptor": is the character to use to encript the string.
+  * "col1,col2,col3,...": is the list of columns to encript.
+  * "column_avg": is the column to use to calculate the avg.
+  * "column_len": is the column to use to calculate the avg dor the no numeric fields.
+  * "path_input": is the path of the input file.
+  * "path_output": is the path of the output file.
 
-* Order is important*
+- Order is important*
 
 - Example:
-````bash
-file_encriptor.py "customers.csv" "masked_client.csv" "&" "Name,Email,Billing" "Billing" "Name" "./source" "./tmp"
-````
+  ````bash
+  file_encriptor.py "customers.csv" "masked_client.csv" "&" "Name,Email,Billing" "Billing" "Name" "./source" "./tmp"
+  ````
 
-if you want to use the default names run:
-````bash
-file_encriptor.py
-````
+  If you want to use the default names run:
+  ````bash
+  file_encriptor.py
+  ````
 
 ## Considerations
 
